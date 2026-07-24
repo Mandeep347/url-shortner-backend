@@ -1,0 +1,4 @@
+
+---------- Generate a secret key for env (one time only)--------------
+import secrets
+print(secrets.token_urlsafe(32))
