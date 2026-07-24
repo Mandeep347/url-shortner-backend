@@ -2,7 +2,7 @@ from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 
-from app.core.config import settings
+from app.core.config import Settings
 from app.schemas.auth import TokenPayload
 
 password_hash = PasswordHash.recommended()
@@ -15,7 +15,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(subject: int):
 
-    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=Settings.access_token_expire_minutes)
 
     payload = {
         "sub": subject,
@@ -24,16 +24,16 @@ def create_access_token(subject: int):
 
     return jwt.encode(
         payload,
-        settings.secret_key,
-        algorithm=settings.algorithm,
+        Settings.secret_key,
+        algorithm=Settings.algorithm,
     )
 
 def decode_access_token(token: str) -> TokenPayload | None:
     try:
         payload = jwt.decode(
             token,
-            settings.secret_key,
-            algorithms=[settings.algorithm],
+            Settings.secret_key,
+            algorithms=[Settings.algorithm],
         )
 
         return TokenPayload(**payload)
